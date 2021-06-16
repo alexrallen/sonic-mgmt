@@ -24,12 +24,16 @@ logger = logging.getLogger(__name__)
 cache = FactsCache()
 
 
-def skip_version(duthost, version_list):
+def skip_version(duthost, version_list, platform=None):
     """
     @summary: Skip current test if any given version keywords are in os_version
     @param duthost: The DUT
     @param version_list: A list of incompatible versions
+    @param platforms: Optional argument to specify platform this directive is applicable to
     """
+    if platform and duthost.facts["asic_type"] != platform
+        return # Not applicable to this platform
+
     if any(version in duthost.os_version for version in version_list):
         pytest.skip("DUT has version {} and test does not support {}".format(duthost.os_version, ", ".join(version_list)))
 
